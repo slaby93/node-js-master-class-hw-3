@@ -2,6 +2,7 @@ import * as http from 'http'
 import { RouteOutput, RouteHandler } from './interfaces'
 import Method from './consts/methods'
 import apiRoutes from './routes'
+import HTMLGlobalController from './controllers'
 
 /**
  * Main Application router
@@ -27,17 +28,21 @@ const matchAPIHandler = async (path: string, query: string, parsedBody: any, par
         return { responseStatus: 404, response: { msg: 'Can\'t find requested API route!' } }
     }
     const output: RouteOutput = await handler(parsedBody, parsedQuery, req, res)
-    return output
+    try {
+        output.response = JSON.stringify(output.response)
+        return output
+    } catch {
+        return { responseStatus: 500, response: JSON.stringify({ err: 'Error while procesing request' }) }
+    }
 }
 
 const matchHTMLHandler = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Method, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
-    const handler: RouteHandler = apiRoutes[path] && apiRoutes[path][method]
-    if (!handler) {
+    if (!HTMLGlobalController.doesRouteExists(path)) {
         //@TODO RETURN 404 page
         return { responseStatus: 404, response: { msg: 'Can\'t find requested HTML route!' } }
     }
-    const output: RouteOutput = await handler(parsedBody, parsedQuery, req, res)
-    return output
+    const response: RouteOutput = await HTMLGlobalController.process(path, query, parsedBody, parsedQuery, method, req, res)
+    return response
 }
 
 const matchAssetsHandler = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Method, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {

@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as path from 'path'
 import logger from './logger';
 const DATA_FOLDER = '.data'
 
@@ -18,7 +19,7 @@ export default {
   load: async (folder: string, file: string): Promise<any> => {
     try {
       return await new Promise((resolve, reject) => {
-        fs.readFile(`${DATA_FOLDER}/${folder}/${file}`, { encoding: 'utf-8', flag: 'r' }, (error, data) => {
+        fs.readFile(path.resolve(`${DATA_FOLDER}/${folder}/${file}`), { encoding: 'utf-8', flag: 'r' }, (error, data) => {
           data && !error ? resolve(data) : reject(error)
         })
       })
