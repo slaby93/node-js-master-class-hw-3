@@ -28,12 +28,7 @@ const matchAPIHandler = async (path: string, query: string, parsedBody: any, par
         return { responseStatus: 404, response: { msg: 'Can\'t find requested API route!' } }
     }
     const output: RouteOutput = await handler(parsedBody, parsedQuery, req, res)
-    try {
-        output.response = JSON.stringify(output.response)
-        return output
-    } catch {
-        return { responseStatus: 500, response: JSON.stringify({ err: 'Error while procesing request' }) }
-    }
+    return output
 }
 
 const matchHTMLHandler = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Method, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {

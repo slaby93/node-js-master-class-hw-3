@@ -7,8 +7,12 @@ class IndexController implements Controller {
   template: string
 
   render = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Methods) => {
+    const data = {}
     this.template = await templateUtils.loadTemplate(IndexController.TEMPLATE)
-    return this.template
+    this.template = templateUtils.interpolate(this.template, data)
+    return {
+      html: this.template, data
+    }
   }
 }
 

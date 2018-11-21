@@ -2,6 +2,7 @@ import * as http from 'http';
 import Methods from "../consts/methods";
 import { RouteOutput } from '../interfaces';
 import indexController from './index.controller'
+import templateUtils from './../utils/templates'
 
 export interface Controller {
   template: string,
@@ -19,21 +20,50 @@ class GlobalController {
   public doesRouteExists = (path: string) => {
     return GlobalController.endpoints[path]
   }
+
+  private _head = async (data: any) => {
+    const template = await templateUtils.loadTemplate('_head.html')
+    return templateUtils.interpolate(template, data)
+  }
+
+  private _header = async (data: any) => {
+    const template = await templateUtils.loadTemplate('_header.html')
+    return templateUtils.interpolate(template, data)
+  }
+
+  private _footer = async (data: any) => {
+    const template = await templateUtils.loadTemplate('_footer.html')
+    return templateUtils.interpolate(template, data)
+  }
+
+  static globalData = {
+    'head.title': 'DS'
+  }
+
   public process = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Methods, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     const Controller = GlobalController.endpoints[path]
     if (!Controller) {
       return { responseStatus: 404 }
     }
     const instance = new Controller()
-    let bodyOutput: string = await instance.render(path, query, parsedQuery, parsedBody, method)
+
+    const { html, data } = await instance.render(path, query, parsedQuery, parsedBody, method)
+    const extendedData = { ...GlobalController.globalData, ...data }
+    const _head = await this._head(extendedData)
+    const _header = await this._header(extendedData)
+    const _footer = await this._footer(extendedData)
+
     res.setHeader('Content-type', 'text/html')
 
     return {
       responseStatus: 200,
       response: `
         <html>
+          ${_head}
           <body>
-            ${bodyOutput}
+            ${_header}
+            ${html}
+            ${_footer}
           </body>
         </html>
       `
