@@ -10,12 +10,12 @@ import { Endpoint } from './../interfaces'
  * Declaration file with possible routes
  */
 const routes: { [index: string]: Endpoint } = {
-  '/user': UserHandler,
-  '/token': TokenHandler,
-  '/menu': MenuHandler,
-  '/cart': CartHandler,
-  '/order': OrderHandler,
-  '/payment': PaymentHandler
+  '/api/user': UserHandler,
+  '/api/token': TokenHandler,
+  '/api/menu': MenuHandler,
+  '/api/cart': CartHandler,
+  '/api/order': OrderHandler,
+  '/api/payment': PaymentHandler,
 }
 
 export default routes

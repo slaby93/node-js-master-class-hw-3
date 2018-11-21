@@ -4,6 +4,7 @@ import router from './router'
 import Method from './consts/methods'
 import * as querystring from 'querystring'
 import { StringDecoder } from 'string_decoder'
+import logger from './utils/logger';
 /**
  * Server wrapper
  * Create and maintain server instance
@@ -34,9 +35,11 @@ class Server {
       const { responseStatus, response } = await router(pathname, query, parsedBody, parsedQuery, method, req, res)
       // assign responseStatus
       res.statusCode = responseStatus
+      console.log({ response })
       // send response along with parsed data
       res.end(this.stringify(response))
-    } catch {
+    } catch(error) {
+      logger.error({ error })
       // This branch should never happen
       res.statusCode = 500
       res.end(this.stringify({
