@@ -17,9 +17,16 @@ const handler: Endpoint = {
    */
   [Methods.GET]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     try {
-      const { id } = queryParamsData
+      const { id, password } = queryParamsData
       if (!id) {
         return { responseStatus: 400, response: { err: 'Invalid id field' } }
+      }
+      const user = new User()
+      user.id = id
+      await user.load()
+      const hashedReceivedPassword = hash(password)
+      if (hashedReceivedPassword !== user.password) {
+        return { responseStatus: 401, response: { err: 'Invalid password!' } }
       }
       const token = await db.load(TOKEN_FOLDER, id)
       const parsedToken = JSON.parse(token)
@@ -55,7 +62,7 @@ const handler: Endpoint = {
         expirationDate: Date.now() + ONE_HOUR
       }
       await db.save(TOKEN_FOLDER, id, JSON.stringify(token))
-      return { responseStatus: 200, response: { token } }
+      return { responseStatus: 200, response: token }
     } catch (error) {
       /**
        * Example how we can be more specific about reason of failure
