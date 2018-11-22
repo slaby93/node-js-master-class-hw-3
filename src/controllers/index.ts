@@ -62,7 +62,9 @@ class GlobalController {
           ${_head}
           <body>
             ${_header}
-            ${html}
+            <section class="bodyContent">
+              ${html}
+            </section>
             ${_footer}
           </body>
         </html>
