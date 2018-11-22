@@ -1,11 +1,5 @@
 import db from './../utils/db'
 
-/**
- * User model.
- *  name: string
- *  email: string
- *  address: string
- */
 class User {
   static FOLDER = 'user'
 
