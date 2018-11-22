@@ -7,7 +7,9 @@ class SignupController implements Controller {
   template: string
 
   render = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Methods) => {
-    const data = {}
+    const data = {
+      'head.title': 'Signup'
+    }
     this.template = await templateUtils.loadTemplate(SignupController.TEMPLATE)
     this.template = templateUtils.interpolate(this.template, data)
     return {

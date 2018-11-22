@@ -7,7 +7,9 @@ class LoginController implements Controller {
   template: string
 
   render = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Methods) => {
-    const data = {}
+    const data = {
+      'head.title': 'Login'
+    }
     this.template = await templateUtils.loadTemplate(LoginController.TEMPLATE)
     this.template = templateUtils.interpolate(this.template, data)
     return {

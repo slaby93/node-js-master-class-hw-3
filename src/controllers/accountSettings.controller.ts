@@ -7,7 +7,9 @@ class AccountSettingsController implements Controller {
   template: string
 
   render = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Methods) => {
-    const data = {}
+    const data = {
+      'head.title': 'Account Settings'
+    }
     this.template = await templateUtils.loadTemplate(AccountSettingsController.TEMPLATE)
     this.template = templateUtils.interpolate(this.template, data)
     return {
