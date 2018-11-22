@@ -95,6 +95,7 @@ function accountSettings() {
 function dashboard() {
   const userId = localStorage.getItem('userId')
   const cart = document.getElementById('cart')
+  if(!cart) { return }
   const list = document.getElementById('availableItems')
   let cartItemsList = {}
   let itemsList = []
