@@ -2,6 +2,10 @@ import * as http from 'http';
 import Methods from "../consts/methods";
 import { RouteOutput } from '../interfaces';
 import indexController from './index.controller'
+import loginController from './login.controller'
+import signupController from './signup.controller'
+import dashboardController from './dashboard.controller'
+import accountSettingsController from './accountSettings.controller'
 import templateUtils from './../utils/templates'
 
 export interface Controller {
@@ -11,7 +15,11 @@ export interface Controller {
 
 class GlobalController {
   static endpoints: { [index: string]: any } = {
-    '/': indexController
+    '/': indexController,
+    '/login': loginController,
+    '/signup': signupController,
+    '/dashboard': dashboardController,
+    '/accountSettings': accountSettingsController,
   }
   private static _instance: GlobalController
 
@@ -36,6 +44,10 @@ class GlobalController {
     return templateUtils.interpolate(template, data)
   }
 
+  private _notFound = async () => {
+    return await templateUtils.loadTemplate('_404.html')
+  } 
+
   static globalData = {
     'head.title': 'DS'
   }
@@ -46,7 +58,6 @@ class GlobalController {
       return { responseStatus: 404 }
     }
     const instance = new Controller()
-
     const { html, data } = await instance.render(path, query, parsedQuery, parsedBody, method)
     const extendedData = { ...GlobalController.globalData, ...data }
     const _head = await this._head(extendedData)
@@ -64,6 +75,31 @@ class GlobalController {
             ${_header}
             <section class="bodyContent">
               ${html}
+            </section>
+            ${_footer}
+          </body>
+        </html>
+      `
+    }
+  }
+
+  public notFound = async () => {
+    const extendedData = { ...GlobalController.globalData }
+
+    const _head = await this._head(extendedData)
+    const _header = await this._header(extendedData)
+    const _footer = await this._footer(extendedData)
+    const _404 = await this._notFound()
+
+    return {
+      responseStatus: 200,
+      response: `
+        <html>
+          ${_head}
+          <body>
+            ${_header}
+            <section class="bodyContent">
+              ${_404}
             </section>
             ${_footer}
           </body>

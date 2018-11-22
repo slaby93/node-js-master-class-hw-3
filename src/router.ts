@@ -34,8 +34,7 @@ const matchAPIHandler = async (path: string, query: string, parsedBody: any, par
 
 const matchHTMLHandler = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Method, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     if (!HTMLGlobalController.doesRouteExists(path)) {
-        //@TODO RETURN 404 page
-        return { responseStatus: 404, response: { msg: 'Can\'t find requested HTML route!' } }
+        return await HTMLGlobalController.notFound()
     }
     const response: RouteOutput = await HTMLGlobalController.process(path, query, parsedBody, parsedQuery, method, req, res)
     return response
