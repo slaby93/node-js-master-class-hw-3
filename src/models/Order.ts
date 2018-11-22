@@ -25,6 +25,7 @@ class Order {
   load = async () => {
     const data: string = await db.load(Order.FOLDER, this.userId)
     const deserializedOrder: Order = await Order.deserialize(data)
+    this.id = deserializedOrder.id
     this.cart = deserializedOrder.cart
     this.userId = deserializedOrder.userId
     this.receivedPayment = deserializedOrder.receivedPayment
