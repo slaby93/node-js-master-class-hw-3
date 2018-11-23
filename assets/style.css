@@ -18,6 +18,11 @@ ul { list-style: none; }
   border-bottom: 1px solid #e4e4e4;
 }
 
+#logo {
+  height: 40px;
+  align-self: center;
+  margin-left: 20px;
+}
 .header .links {
   display: flex;
   flex-direction: row;

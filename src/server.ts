@@ -35,9 +35,8 @@ class Server {
       const { responseStatus, response } = await router(pathname, query, parsedBody, parsedQuery, method, req, res)
       // assign responseStatus
       res.statusCode = responseStatus
-      const parsedRespose: string = typeof(response) === 'string' ? response : this.stringify(response)
       // send response along with parsed data
-      res.end(parsedRespose)
+      res.end(response)
     } catch(error) {
       logger.error({ error })
       // This branch should never happen

@@ -51,4 +51,15 @@ export default {
       throw error
     }
   },
+  loadAssets: async (folder: string, file: string): Promise<any> => {
+    try {
+      return await new Promise((resolve, reject) => {
+        fs.readFile(path.resolve(`${DATA_FOLDER}/${folder}/${file}`), { flag: 'r' }, (error, data) => {
+          data && !error ? resolve(data) : reject(error)
+        })
+      })
+    } catch (error) {
+      logger.error({ error })
+    }
+  },
 }

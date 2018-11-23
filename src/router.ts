@@ -43,7 +43,7 @@ const matchHTMLHandler = async (path: string, query: string, parsedBody: any, pa
 const matchAssetsHandler = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Method, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     const extension: string = (/\.\w+$/gm).exec(path)[0].substr(1) // css, jpeg etc
     const filename: string = (/[a-zA-Z0-9]+\.\w*$/gm).exec(path)[0]
-    const file: string = await db.load('./../assets/', filename)
+    const file: string = await db.loadAssets('./../assets/', filename)
     if (!file) {
         return { responseStatus: 404, response: { msg: 'Can\'t find requested file route!' } }
     }
